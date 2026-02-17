@@ -1,0 +1,7 @@
+zerodha:
+  redirect-url: https://api.zerotrade.in/api/v1/auth/callback
+  postback-url: https://api.zerotrade.in/api/v1/webhooks/orders
+
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/zerotrade

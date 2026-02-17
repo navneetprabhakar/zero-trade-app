@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: zerotrade-postgres
+    environment:
+      POSTGRES_DB: zerotrade
+      POSTGRES_USER: zerotrade
+      POSTGRES_PASSWORD: zerotrade
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - zerotrade-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zerotrade -d zerotrade"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  zerotrade-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
