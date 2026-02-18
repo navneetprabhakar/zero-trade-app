@@ -53,27 +53,35 @@ public class InMemoryChatMemory implements ChatMemory {
     private void trimIfNeeded(String sessionId) {
         List<Message> msgs = conversations.get(sessionId);
         if (msgs != null && msgs.size() > maxMessagesPerSession) {
-            // Keep system message + last N messages
+            List<Message> trimmed = new ArrayList<>();
+
+            // Try to find and keep the system message
             Message system = msgs.stream()
                     .filter(m -> m.getMessageType() == MessageType.SYSTEM)
-                    .findFirst().orElse(null);
-            List<Message> trimmed = new ArrayList<>();
-            if (system != null)
+                    .findFirst()
+                    .orElse(null);
+
+            if (system != null) {
                 trimmed.add(system);
+            }
 
-            // Calculate how many messages to keep. If system message exists, we keep one
-            // less to make room.
-            int messagesToKeep = maxMessagesPerSession - (system != null ? 1 : 0);
+            // Calculate how many recent messages to keep
+            // If we kept a system message, reduce capacity by 1
+            int capacityLeft = maxMessagesPerSession - (system != null ? 1 : 0);
 
-            // Sublist from end
-            int startIndex = Math.max(0, msgs.size() - messagesToKeep);
-            // Ensure we don't include the system message again if it was in the tail
-            // But complicating this might be unnecessary if we just take the tail.
-            // The logic in the plan was simple: system + tail.
+            // Get the last N messages
+            int startIndex = Math.max(0, msgs.size() - capacityLeft);
+            List<Message> recentParams = msgs.subList(startIndex, msgs.size());
 
-            trimmed.addAll(msgs.subList(msgs.size() - messagesToKeep, msgs.size()));
+            // Add recent messages, avoiding duplication of the system message if it's also
+            // in the recent list
+            for (Message m : recentParams) {
+                if (system != null && m.equals(system)) {
+                    continue;
+                }
+                trimmed.add(m);
+            }
 
-            // Replace with trimmed list
             conversations.put(sessionId, new CopyOnWriteArrayList<>(trimmed));
         }
     }

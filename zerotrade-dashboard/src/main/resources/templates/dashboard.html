@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ZeroTrade AI - Command Center</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ZeroTrade AI <span class="badge">LIVE</span></h1>
+            <div id="market-ticker">
+                <span>NIFTY 50: <span class="price">22,150.00</span> <span class="change positive">+0.5%</span></span>
+                <span>BANKNIFTY: <span class="price">46,800.00</span> <span class="change negative">-0.2%</span></span>
+            </div>
+        </header>
+
+        <div class="grid">
+            <!-- Agent Activity Log -->
+            <div class="card agent-brain">
+                <h2>Agent Neural Stream</h2>
+                <div id="agent-logs" class="log-container">
+                    <p class="log-entry system">[System] Connection established to Agent Framework...</p>
+                </div>
+                <!-- Hidden div to handle SSE connection -->
+                <div hx-ext="sse" sse-connect="/api/stream" sse-swap="message" hx-target="#agent-logs" hx-swap="beforeend"></div>
+            </div>
+
+            <!-- Portfolio Summary -->
+            <div class="card portfolio">
+                <h2>Portfolio Overview</h2>
+                <div class="portfolio-stats">
+                    <div class="stat">
+                        <label>Total Value</label>
+                        <span class="value" th:text="${portfolio['currentValue']}">0.00</span>
+                    </div>
+                    <div class="stat">
+                        <label>Invested</label>
+                        <span class="value" th:text="${portfolio['invested']}">0.00</span>
+                    </div>
+                    <div class="stat">
+                        <label>P&L</label>
+                        <span class="value" th:classappend="${portfolio['pnl'] >= 0} ? 'positive' : 'negative'" 
+                              th:text="${portfolio['pnl']}">0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Orders -->
+            <div class="card orders">
+                <h2>Active Orders</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Type</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>INFY</td>
+                            <td>BUY</td>
+                            <td>10</td>
+                            <td>1540.00</td>
+                            <td><span class="status executed">EXECUTED</span></td>
+                        </tr>
+                        <tr>
+                            <td>RELIANCE</td>
+                            <td>SELL</td>
+                            <td>5</td>
+                            <td>2950.00</td>
+                            <td><span class="status pending">PENDING</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.body.addEventListener('htmx:sseMessage', function (e) {
+            const logContainer = document.getElementById('agent-logs');
+            const newLog = document.createElement('p');
+            newLog.className = 'log-entry';
+            newLog.innerText = e.detail.data;
+            logContainer.appendChild(newLog);
+            
+            // Auto-scroll to bottom
+            logContainer.scrollTop = logContainer.scrollHeight;
+
+            // Limit logs
+            if (logContainer.children.length > 50) {
+                logContainer.removeChild(logContainer.firstChild);
+            }
+        });
+    </script>
+</body>
+</html>

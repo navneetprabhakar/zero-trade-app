@@ -24,9 +24,24 @@
             <artifactId>spring-ai-anthropic-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.zerotrade</groupId>
+            <artifactId>zerotrade-news</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-mcp-client-spring-boot-starter</artifactId>
             <version>${spring-ai.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ta4j</groupId>
+            <artifactId>ta4j-core</artifactId>
+            <version>${ta4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zerotrade</groupId>
+            <artifactId>zerotrade-risk-engine</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

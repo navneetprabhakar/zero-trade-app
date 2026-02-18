@@ -10,7 +10,36 @@
     </parent>
 
     <artifactId>zerotrade-dashboard</artifactId>
-    <name>zerotrade-dashboard</name>
-    <description>Dashboard UI Module (React)</description>
-    <packaging>pom</packaging> <!-- Just a marker for now, or could build frontend with frontend-maven-plugin later -->
+    <description>Dashboard UI Module (Thymeleaf)</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.zerotrade</groupId>
+            <artifactId>zerotrade-core</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zerotrade</groupId>
+            <artifactId>zerotrade-agents</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
