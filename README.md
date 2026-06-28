@@ -2,6 +2,8 @@
 
 A Spring Boot-based autonomous trading system powered by Multi-Agent AI orchestration, integrated with Zerodha Kite Connect for India's stock market.
 
+> ⚠️ **Work in progress.** This is an experimental, evolving project — not production-ready. Run it in `dry-run` mode only. Nothing here is financial advice.
+
 ## 🚀 Features
 
 - **Autonomous AI Agents**: Specialized agents for Technical Analysis, News Sentiment, and Equity Research.
@@ -15,17 +17,17 @@ A Spring Boot-based autonomous trading system powered by Multi-Agent AI orchestr
 
 ## 📋 Prerequisites
 
-- **Java 21**: Required for Spring Boot 3.4 and Spring AI (with `--enable-preview` for some features).
+- **Java 21**: Required for Spring Boot 3.4 and Spring AI.
 - **Maven 3.9+**: For building the multi-module project.
-- **Docker & Docker Compose**: For running PostgreSQL database.
+- **Docker & Docker Compose**: For running the PostgreSQL database.
 - **Zerodha Kite Connect**: API Key and Secret for live market data and trading.
-- **Anthropic API Key**: For powering the Claude 3.5 Sonnet LLM.
+- **Anthropic API Key**: For powering the Claude (Sonnet) LLM via Spring AI.
 
 ## 🛠️ Technology Stack
 
 - **Core Framework**: Spring Boot 3.4.1
-- **AI & LLM**: Spring AI 1.0.0-M1 (Claude 3.5 Sonnet)
-- **Database**: PostgreSQL 16 (via Docker)
+- **AI & LLM**: Spring AI 1.0.0-M6 (Anthropic Claude Sonnet, `claude-sonnet-4-20250514`)
+- **Database**: PostgreSQL (via Docker)
 - **Migration**: Flyway for database schema version control
 - **Trading API**: Zerodha Kite Connect SDK
 - **Technical Analysis**: Ta4j Library
@@ -66,8 +68,8 @@ spring:
     anthropic:
       chat:
         options:
-          model: claude-3-5-sonnet-20240620
-          temperature: 0.1 # Low temp for analytical precision
+          model: claude-sonnet-4-20250514
+          temperature: 0.3 # Low temp for analytical precision
 
 zerodha:
   api-key: ${ZERODHA_API_KEY}
@@ -131,6 +133,8 @@ zero-trade-app/
 │   └── src/main/java/com/zerotrade/risk/
 │       └── service/          # RiskService (Position Sizing, Stop Loss)
 ├── zerotrade-mcp-server/   # MCP Server implementation
+├── zerotrade-telegram/     # Telegram notification integration
+├── zerotrade-libs/         # Vendored libs (e.g. javakiteconnect)
 ├── zerotrade-dashboard/    # UI Module (Spring Boot + Thymeleaf)
 │   └── src/main/java/com/zerotrade/dashboard/
 │       ├── controller/       # DashboardController (SSE Endpoints)
